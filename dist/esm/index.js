@@ -1,19 +1,11 @@
-import PizZip from "pizzip";
-import * as fs from "fs";
 export class OdtTemplater {
-    zip;
     contentXml;
-    constructor(templatePath) {
-        if (!fs.existsSync(templatePath)) {
-            throw new Error(`Template file not found at: ${templatePath}`);
-        }
-        const content = fs.readFileSync(templatePath, "binary");
-        this.zip = new PizZip(content);
-        const file = this.zip.files["content.xml"];
-        if (!file) {
-            throw new Error("content.xml not found in the ODT file.");
-        }
-        this.contentXml = file.asText();
+    /**
+     * Constructs an OdtTemplater instance.
+     * @param contentXml The 'content.xml' file content as a string.
+     */
+    constructor(contentXml) {
+        this.contentXml = contentXml;
     }
     /**
      * Retrieves the value from a nested object based on a dot-separated path.
@@ -83,22 +75,15 @@ export class OdtTemplater {
         });
     }
     /**
-     * Replaces placeholders and processes conditional blocks in the ODT content.
+     * Renders the template by replacing placeholders and processing conditional blocks.
      * @param data The object containing the placeholder values.
+     * @returns The final 'content.xml' as a string.
      */
-    replaceVariables(data) {
+    render(data) {
         this._removeTagsFromTemplate();
         this._processConditionals(data);
         this._processEmptyConditionals(data);
         this._replacePlaceholders(data);
-    }
-    /**
-     * Generates a new ODT file with the updated content.
-     * @param outputPath The path where the new file should be saved.
-     */
-    generate(outputPath) {
-        this.zip.file("content.xml", this.contentXml);
-        const newZipContent = this.zip.generate({ type: "nodebuffer" });
-        fs.writeFileSync(outputPath, newZipContent);
+        return this.contentXml;
     }
 }

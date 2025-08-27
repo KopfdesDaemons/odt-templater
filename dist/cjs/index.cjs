@@ -1,58 +1,14 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OdtTemplater = void 0;
-const pizzip_1 = __importDefault(require("pizzip"));
-const fs = __importStar(require("fs"));
 class OdtTemplater {
-    zip;
     contentXml;
-    constructor(templatePath) {
-        if (!fs.existsSync(templatePath)) {
-            throw new Error(`Template file not found at: ${templatePath}`);
-        }
-        const content = fs.readFileSync(templatePath, "binary");
-        this.zip = new pizzip_1.default(content);
-        const file = this.zip.files["content.xml"];
-        if (!file) {
-            throw new Error("content.xml not found in the ODT file.");
-        }
-        this.contentXml = file.asText();
+    /**
+     * Constructs an OdtTemplater instance.
+     * @param contentXml The 'content.xml' file content as a string.
+     */
+    constructor(contentXml) {
+        this.contentXml = contentXml;
     }
     /**
      * Retrieves the value from a nested object based on a dot-separated path.
@@ -122,23 +78,16 @@ class OdtTemplater {
         });
     }
     /**
-     * Replaces placeholders and processes conditional blocks in the ODT content.
+     * Renders the template by replacing placeholders and processing conditional blocks.
      * @param data The object containing the placeholder values.
+     * @returns The final 'content.xml' as a string.
      */
-    replaceVariables(data) {
+    render(data) {
         this._removeTagsFromTemplate();
         this._processConditionals(data);
         this._processEmptyConditionals(data);
         this._replacePlaceholders(data);
-    }
-    /**
-     * Generates a new ODT file with the updated content.
-     * @param outputPath The path where the new file should be saved.
-     */
-    generate(outputPath) {
-        this.zip.file("content.xml", this.contentXml);
-        const newZipContent = this.zip.generate({ type: "nodebuffer" });
-        fs.writeFileSync(outputPath, newZipContent);
+        return this.contentXml;
     }
 }
 exports.OdtTemplater = OdtTemplater;

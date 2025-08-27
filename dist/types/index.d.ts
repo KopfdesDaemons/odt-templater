@@ -1,7 +1,10 @@
 export declare class OdtTemplater {
-    private zip;
     private contentXml;
-    constructor(templatePath: string);
+    /**
+     * Constructs an OdtTemplater instance.
+     * @param contentXml The 'content.xml' file content as a string.
+     */
+    constructor(contentXml: string);
     /**
      * Retrieves the value from a nested object based on a dot-separated path.
      * E.g., for path 'user.name', it retrieves data['user']['name'].
@@ -34,15 +37,11 @@ export declare class OdtTemplater {
      */
     private _replacePlaceholders;
     /**
-     * Replaces placeholders and processes conditional blocks in the ODT content.
+     * Renders the template by replacing placeholders and processing conditional blocks.
      * @param data The object containing the placeholder values.
+     * @returns The final 'content.xml' as a string.
      */
-    replaceVariables(data: {
+    render(data: {
         [key: string]: any;
-    }): void;
-    /**
-     * Generates a new ODT file with the updated content.
-     * @param outputPath The path where the new file should be saved.
-     */
-    generate(outputPath: string): void;
+    }): string;
 }

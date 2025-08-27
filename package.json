@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
-  "author": "",
   "type": "module",
   "exports": {
     ".": {
@@ -29,8 +28,5 @@
   "devDependencies": {
     "@types/node": "^20.14.9",
     "typescript": "^5.5.3"
-  },
-  "dependencies": {
-    "pizzip": "^3.2.0"
   }
 }
