@@ -1,0 +1,36 @@
+{
+  "name": "odt-templater",
+  "version": "1.0.0",
+  "description": "A simple templating engine for OpenDocument Text (.odt) files.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build:cjs": "tsc --project tsconfig.cjs.json && mv dist/cjs/index.js dist/cjs/index.cjs",
+    "build:esm": "tsc --project tsconfig.esm.json",
+    "build": "npm run build:cjs && npm run build:esm"
+  },
+  "keywords": [
+    "odt",
+    "templater",
+    "templates",
+    "generation",
+    "generator"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "typescript": "^5.5.3"
+  },
+  "dependencies": {
+    "pizzip": "^3.2.0"
+  }
+}
