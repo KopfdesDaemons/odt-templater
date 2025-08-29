@@ -42,24 +42,56 @@ class OdtTemplater {
         });
     }
     /**
-     * Processes conditionals in the ODT content.
+     * Processes inline conditionals in the ODT content.
      * E.g., {#key == value}...{/} will include the content if key equals value.
      * @param data The object containing the placeholder values.
      */
-    _processConditionals(data) {
-        const conditionRegex = /\{#\s*([^\\{}]+?)\s*==\s*(.*?)\}(.*?)\{\/\}/gs;
+    _processInlineConditionals(data) {
+        const conditionRegex = /\{\s*#([^\\{}]+?)\s*==\s*(.*?)\s*\}((?:(?!text:p)[\s\S])*?)\{\/\}/gs;
         this.contentXml = this.contentXml.replace(conditionRegex, (_match, key, value, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue?.toString() === value ? content : "";
         });
     }
     /**
-     * Processes empty conditionals in the ODT content.
+     * Processes inline empty conditionals in the ODT content.
      * E.g., {#key }...{/} will include the content if key is non-empty.
      * @param data The object containing the placeholder values.
      */
-    _processEmptyConditionals(data) {
-        const emptyConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{#\s*(.*?)\s*\}<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+    _processEmptyInlineConditionals(data) {
+        const emptyConditionRegex = /\{\s*#([^\\{}]+?)\s*\}((?:(?!text:p)[\s\S])*?)\{\/\}/gs;
+        this.contentXml = this.contentXml.replace(emptyConditionRegex, (_match, key, content) => {
+            const actualValue = this._getValueFromPath(data, key);
+            return actualValue !== null && actualValue !== undefined && actualValue !== "" && actualValue !== false ? content : "";
+        });
+    }
+    /**
+     * Processes block conditionals in the ODT content.
+     * E.g.,
+     *   {#key == value}
+     *    ...
+     *   {/}
+     * will include the content if key equals value.
+     * @param data The object containing the placeholder values.
+     */
+    _processBlockConditionals(data) {
+        const blockConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#(.*?)\s*==\s*(.*?)\s*\}<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+        this.contentXml = this.contentXml.replace(blockConditionRegex, (_match, key, value, content) => {
+            const actualValue = this._getValueFromPath(data, key);
+            return actualValue?.toString() === value ? content : "";
+        });
+    }
+    /**
+     * Processes empty block conditionals in the ODT content.
+     * E.g.:
+     *   {#key }
+     *    ...
+     *   {/}
+     * will include the content if key is non-empty.
+     * @param data The object containing the placeholder values.
+     */
+    _processEmptyBlockConditionals(data) {
+        const emptyConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#(.*?)\s*\}<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
         this.contentXml = this.contentXml.replace(emptyConditionRegex, (_match, key, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue !== null && actualValue !== undefined && actualValue !== "" && actualValue !== false ? content : "";
@@ -84,8 +116,10 @@ class OdtTemplater {
      */
     render(data) {
         this._removeTagsFromTemplate();
-        this._processConditionals(data);
-        this._processEmptyConditionals(data);
+        this._processInlineConditionals(data);
+        this._processBlockConditionals(data);
+        this._processEmptyInlineConditionals(data);
+        this._processEmptyBlockConditionals(data);
         this._replacePlaceholders(data);
         return this.contentXml;
     }

@@ -19,17 +19,37 @@ export declare class OdtTemplater {
      */
     private _removeTagsFromTemplate;
     /**
-     * Processes conditionals in the ODT content.
+     * Processes inline conditionals in the ODT content.
      * E.g., {#key == value}...{/} will include the content if key equals value.
      * @param data The object containing the placeholder values.
      */
-    private _processConditionals;
+    private _processInlineConditionals;
     /**
-     * Processes empty conditionals in the ODT content.
+     * Processes inline empty conditionals in the ODT content.
      * E.g., {#key }...{/} will include the content if key is non-empty.
      * @param data The object containing the placeholder values.
      */
-    private _processEmptyConditionals;
+    private _processEmptyInlineConditionals;
+    /**
+     * Processes block conditionals in the ODT content.
+     * E.g.,
+     *   {#key == value}
+     *    ...
+     *   {/}
+     * will include the content if key equals value.
+     * @param data The object containing the placeholder values.
+     */
+    private _processBlockConditionals;
+    /**
+     * Processes empty block conditionals in the ODT content.
+     * E.g.:
+     *   {#key }
+     *    ...
+     *   {/}
+     * will include the content if key is non-empty.
+     * @param data The object containing the placeholder values.
+     */
+    private _processEmptyBlockConditionals;
     /**
      * Replaces placeholders in the ODT content with their corresponding values.
      * E.g., {user.name} will be replaced with the value of data.user.name.

@@ -12,11 +12,13 @@ A simple templating engine for OpenDocument Text (.odt) files.
 
 - Supports empty conditionals in the ODT content.
 
-  E.g., `{#key}...{/}` will include the content if key is non-empty or false.
+  E.g., `{#key}...{/}` will include the content if key is non-empty and not false.
 
-## Odt-templater examples
+## Getting Started
 
 Minimal examples for using the odt-templater in Node.js and in the browser.
+
+There is a [Github repository](https://github.com/KopfdesDaemons/odt-templater-examples) with the following examples.
 
 ### Usage in Node.js
 
@@ -104,3 +106,54 @@ async function generateOdtDocument() {
 
 document.getElementById("generateBtn").addEventListener("click", generateOdtDocument);
 ```
+
+## Template Syntax
+
+### Placeholders
+
+Placeholders are defined with curly braces. The following syntax is supported.
+
+- {key} - Replaces with the value of `data[key]`
+- {key.key} - Replaces with the value of `data[key][key]`
+- { key } - Replaces with the value of `data[key]`
+- { key.key } - Replaces with the value of `data[key][key]`
+
+Example:
+
+![placeholder-example](/src/img/placeholders-example.png)
+
+Result:
+
+![placeholder-example-rendered](/src/img/placeholders-example-rendered.png)
+
+### Conditionals
+
+Conditions are defined with curly braces, a hash mark, the key being checked, a double equal sign, and the value being compared.
+
+Example:
+
+- {#key == value} ... {/}
+- {#key.key == value} ... {/}
+- { #key == value } ... {/}
+- { #key.key == value } ... {/}
+
+There is support for inline conditionals and block conditionals.
+
+Example:
+
+![conditional-example](/src/img/conditionals-example.png)
+
+### Empty Conditionals
+
+Empty conditionals are defined with curly braces, a hash mark, and a key.
+
+- {#key} ... {/}
+- {#key.key} ... {/}
+- { #key} ... {/}
+- { #key.key } ... {/}
+
+False values ​​and empty strings are considered empty.
+
+Example:
+
+![conditional-example](/src/img/empty-conditionals-example.png)
