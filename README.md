@@ -1,6 +1,6 @@
 # Odt-templater
 
-A simple templating engine for OpenDocument Text (.odt) files.
+A simple templating engine for OpenDocument Text (.odt) files that can be used in Node.js and in the browser.
 
 - Replaces placeholders in the ODT content with their corresponding values.
 
@@ -16,9 +16,13 @@ A simple templating engine for OpenDocument Text (.odt) files.
 
 ## Getting Started
 
-Minimal examples for using the odt-templater in Node.js and in the browser.
+```bash
+npm i odt-templater
+```
 
 There is a [Github repository](https://github.com/KopfdesDaemons/odt-templater-examples) with the following examples.
+
+Minimal examples for using the odt-templater in Node.js and in the browser:
 
 ### Usage in Node.js
 
@@ -120,11 +124,11 @@ Placeholders are defined with curly braces. The following syntax is supported.
 
 Example:
 
-![placeholder-example](/src/img/placeholders-example.png)
+![placeholder-example](/src/img/placeholders-example.avif)
 
 Result:
 
-![placeholder-example-rendered](/src/img/placeholders-example-rendered.png)
+![placeholder-example-rendered](/src/img/placeholders-example-rendered.avif)
 
 ### Conditionals
 
@@ -139,7 +143,7 @@ There is support for inline conditionals and block conditionals.
 
 Example:
 
-![conditional-example](/src/img/conditionals-example.png)
+![conditional-example](/src/img/conditionals-example.avif)
 
 ### Empty Conditionals
 
@@ -154,4 +158,4 @@ False values ​​and empty strings are considered empty.
 
 Example:
 
-![conditional-example](/src/img/empty-conditionals-example.png)
+![conditional-example](/src/img/empty-conditionals-example.avif)
