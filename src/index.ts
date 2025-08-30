@@ -49,7 +49,7 @@ export class OdtTemplater {
    * @param data The object containing the placeholder values.
    */
   private _processInlineConditionals(data: { [key: string]: any }): void {
-    const conditionRegex = /\{\s*#([^\\{}]+?)\s*==\s*(.*?)\s*\}((?:(?!text:p)[\s\S])*?)\{\/\}/gs;
+    const conditionRegex = /\{\s*#([^\\{}]+?)\s*==\s*([^\\{}]+?)\s*\}((?:(?!text:p)[\s\S])*?)\{\/\}/gs;
     this.contentXml = this.contentXml.replace(conditionRegex, (_match, key: string, value: string, content: string): string => {
       const actualValue = this._getValueFromPath(data, key);
       return actualValue?.toString() === value ? content : "";
@@ -80,7 +80,7 @@ export class OdtTemplater {
    */
   private _processBlockConditionals(data: { [key: string]: any }): void {
     const blockConditionRegex =
-      /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#(.*?)\s*==\s*(.*?)\s*\}<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+      /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*==\s*([^\\{}]+?)\s*\}\s*<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
     this.contentXml = this.contentXml.replace(blockConditionRegex, (_match, key: string, value: string, content: string): string => {
       const actualValue = this._getValueFromPath(data, key);
       return actualValue?.toString() === value ? content : "";
@@ -98,7 +98,7 @@ export class OdtTemplater {
    */
   private _processEmptyBlockConditionals(data: { [key: string]: any }): void {
     const emptyConditionRegex =
-      /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#(.*?)\s*\}<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+      /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*\}\s*<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
     this.contentXml = this.contentXml.replace(emptyConditionRegex, (_match, key: string, content: string): string => {
       const actualValue = this._getValueFromPath(data, key);
       return actualValue !== null && actualValue !== undefined && actualValue !== "" && actualValue !== false ? content : "";

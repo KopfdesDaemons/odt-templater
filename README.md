@@ -130,8 +130,6 @@ Result:
 
 Conditions are defined with curly braces, a hash mark, the key being checked, a double equal sign, and the value being compared.
 
-Example:
-
 - {#key == value} ... {/}
 - {#key.key == value} ... {/}
 - { #key == value } ... {/}
