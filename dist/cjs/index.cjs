@@ -75,7 +75,7 @@ class OdtTemplater {
      * @param data The object containing the placeholder values.
      */
     _processBlockConditionals(data) {
-        const blockConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*==\s*([^\\{}]+?)\s*\}\s*<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+        const blockConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*==\s*([^\\{}]+?)\s*\}\s*<.*?\/text:p>([\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
         this.contentXml = this.contentXml.replace(blockConditionRegex, (_match, key, value, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue?.toString() === value ? content : "";
@@ -91,7 +91,7 @@ class OdtTemplater {
      * @param data The object containing the placeholder values.
      */
     _processEmptyBlockConditionals(data) {
-        const emptyConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*\}\s*<.*?\/text:p>(<text:p[\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+        const emptyConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*\}\s*<.*?\/text:p>([\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
         this.contentXml = this.contentXml.replace(emptyConditionRegex, (_match, key, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue !== null && actualValue !== undefined && actualValue !== "" && actualValue !== false ? content : "";
