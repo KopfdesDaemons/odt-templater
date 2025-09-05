@@ -8,8 +8,7 @@
   "types": "./dist/esm/index.d.ts",
   "files": [
     "dist",
-    "README.md",
-    "src/img"
+    "README.md"
   ],
   "exports": {
     "import": {
@@ -33,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/KopfdesDaemons/odt-templater.git"
+    "url": "git+https://github.com/KopfdesDaemons/odt-templater.git"
   },
   "keywords": [
     "odt",
@@ -43,6 +42,7 @@
     "generator"
   ],
   "author": "KopfdesDaemons",
+  "homepage": "https://odt-templater.com/",
   "bugs": {
     "url": "https://github.com/KopfdesDaemons/odt-templater/issues"
   },

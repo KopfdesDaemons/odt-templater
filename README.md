@@ -2,17 +2,13 @@
 
 A simple templating engine for OpenDocument Text (.odt) files that can be used in Node.js and in the browser.
 
-- Replaces placeholders in the ODT content with their corresponding values.
+🚀 Super lightweight: 2KB (zipped 659 bytes)
 
-  E.g., `{user.name}` will be replaced with the value of data.user.name.
+## Features
 
-- Supports conditionals in the ODT content.
-
-  E.g., `{#key == value}...{/}` will include the content if key equals value.
-
-- Supports empty conditionals in the ODT content.
-
-  E.g., `{#key}...{/}` will include the content if key is non-empty and not false.
+- Placeholder replacement
+- Conditionals
+- Empty conditionals
 
 ## Getting Started
 
@@ -20,9 +16,9 @@ A simple templating engine for OpenDocument Text (.odt) files that can be used i
 npm i odt-templater
 ```
 
-There is a [Github repository](https://github.com/KopfdesDaemons/odt-templater-examples) with the following examples.
+The odt templater requires the content of the ODT file as a string as a parameter. The content must be read from the `content.xml` file within the ODT file. Any ZIP library, such as [JSZip](https://www.npmjs.com/package/jszip) or [PizZip](https://www.npmjs.com/package/pizzip?activeTab=code), can be used for this task.
 
-Minimal examples for using the odt-templater in Node.js and in the browser:
+There is a [GitHub repository](https://github.com/KopfdesDaemons/odt-templater-examples) with the following examples.
 
 ### Usage in Node.js
 
@@ -64,6 +60,16 @@ fs.writeFileSync("./output.odt", outputBuffer);
 ```
 
 ### Usage in the browser
+
+```js
+import { OdtTemplater } from "odt-templater";
+```
+
+You can also embed the odt-templater from a CDN.
+
+```js
+import { OdtTemplater } from "https://cdn.jsdelivr.net/npm/odt-templater/dist/esm/index.js";
+```
 
 ```js
 async function generateOdtDocument() {
@@ -119,47 +125,104 @@ document.getElementById("generateBtn").addEventListener("click", generateOdtDocu
 
 ### Placeholders
 
-Placeholders are defined with curly braces. The following syntax is supported.
+Placeholders are defined in the ODT template file with curly braces. The following syntax is supported:
 
-- {key} - Replaces with the value of `data[key]`
-- {key.key} - Replaces with the value of `data[key][key]`
-- { key } - Replaces with the value of `data[key]`
-- { key.key } - Replaces with the value of `data[key][key]`
+Single key placeholders:
 
-Example:
+```
+{key}
+```
 
-![placeholder-example](/src/img/placeholders-example.avif)
+(Replaces with the value of `data[key]`)
 
-Result:
+Nested key placeholders:
 
-![placeholder-example-rendered](/src/img/placeholders-example-rendered.avif)
+```
+{key.key}
+```
 
-### Conditionals
+(Replaces with the value of `data[key][key]`)
+
+An space can be added between the braces and the key:
+
+```
+{ key }
+{ key.key }
+```
+
+#### Example
+
+```
+{ title }
+
+Hello {user.first_name} {user.last_name}!
+
+This is an example.
+{ description }
+```
+
+### Conditionals syntax
 
 Conditions are defined with curly braces, a hash mark, the key being checked, a double equal sign, and the value being compared.
 
-- {#key == value} ... {/}
-- {#key.key == value} ... {/}
-- { #key == value } ... {/}
-- { #key.key == value } ... {/}
+#### Inline conditionals
 
-There is support for inline conditionals and block conditionals.
+```js
+{#key == value} Hello World {/}
+{#key.key == value} Hello World {/}
+```
 
-Example:
+An space can be added between the braces and the key:
 
-![conditional-example](/src/img/conditionals-example.avif)
+```js
+{ #key == value } Hello World {/}
+{ #key.key == value } Hello World {/}
+```
+
+#### Block conditionals
+
+```js
+{#key == value}
+  Hello World
+{/}
+```
+
+```js
+{#user.first_name == John}
+  Hello {user.first_name}
+{/}
+```
 
 ### Empty Conditionals
 
+Check your values for empty strings, null or undefined values.
+
 Empty conditionals are defined with curly braces, a hash mark, and a key.
 
-- {#key} ... {/}
-- {#key.key} ... {/}
-- { #key} ... {/}
-- { #key.key } ... {/}
+#### Inline conditionals
 
-False values ​​and empty strings are considered empty.
+```js
+{#key} Hello World {/}
+{#key.key} Hello World {/}
+```
 
-Example:
+An space can be added between the braces and the key:
 
-![conditional-example](/src/img/empty-conditionals-example.avif)
+```js
+{ #key } Hello World {/}
+{ #key.key } Hello World {/}
+```
+
+#### Block conditionals
+
+```js
+{#key}
+  Hello World
+{/}
+```
+
+```js
+{#user.first_name}
+  Hello {user.first_name}
+{/}
+```
