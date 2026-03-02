@@ -14,6 +14,12 @@ export declare class OdtTemplater {
      */
     private _getValueFromPath;
     /**
+     * Escapes special characters in a string to prevent XML corruption.
+     * @param str The string to escape.
+     * @returns The escaped string.
+     */
+    private _escapeSpecialCharacters;
+    /**
      * Removes Tags from within placeholders in the template.
      * E.g., {<text:span>key</text:span>} becomes {key}
      */

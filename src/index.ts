@@ -31,6 +31,15 @@ export class OdtTemplater {
   }
 
   /**
+   * Escapes special characters in a string to prevent XML corruption.
+   * @param str The string to escape.
+   * @returns The escaped string.
+   */
+  private _escapeSpecialCharacters(str: string): string {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+  }
+
+  /**
    * Removes Tags from within placeholders in the template.
    * E.g., {<text:span>key</text:span>} becomes {key}
    */
@@ -114,7 +123,7 @@ export class OdtTemplater {
     const variableRegex = /\{([^#/]*?)\}/g;
     this.contentXml = this.contentXml.replace(variableRegex, (_match: string, path: string): string => {
       const value = this._getValueFromPath(data, path.trim());
-      return value !== null && value !== undefined ? String(value) : "";
+      return value !== null && value !== undefined ? this._escapeSpecialCharacters(String(value)) : "";
     });
   }
 

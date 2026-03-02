@@ -1,6 +1,6 @@
 {
   "name": "odt-templater",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simple templating engine for OpenDocument Text (.odt) files.",
   "main": "dist/cjs/index.cjs",
   "license": "MIT",
