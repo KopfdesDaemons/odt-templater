@@ -2,7 +2,7 @@
 
 A simple templating engine for OpenDocument Text (.odt) files that can be used in Node.js and in the browser.
 
-🚀 Super lightweight: 2KB (zipped 659 bytes)
+🚀 Super lightweight: 2.2KB (zipped 756 bytes)
 
 ## Features
 

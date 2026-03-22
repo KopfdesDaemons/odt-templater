@@ -36,13 +36,13 @@ export class OdtTemplater {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
     }
     /**
-     * Removes Tags from within placeholders in the template.
+     * Removes tags from placeholders in the template.
      * E.g., {<text:span>key</text:span>} becomes {key}
      */
     _removeTagsFromTemplate() {
-        const variableWithTagsRegex = /\{([^}]*)\}/g;
+        const variableWithTagsRegex = /\{([^{}}]*)\}/g;
         this.contentXml = this.contentXml.replace(variableWithTagsRegex, (_match, innerContent) => {
-            const cleanedContent = innerContent.replace(/<[^>]+>/g, "");
+            const cleanedContent = innerContent.replace(/<[^<>]+?>/g, "");
             return `{${cleanedContent}}`;
         });
     }
@@ -52,7 +52,7 @@ export class OdtTemplater {
      * @param data The object containing the placeholder values.
      */
     _processInlineConditionals(data) {
-        const conditionRegex = /\{\s*#([^\\{}]+?)\s*==\s*([^\\{}]+?)\s*\}((?:(?!text:p)[\s\S])*?)\{\/\}/gs;
+        const conditionRegex = /\{\s?#([^#\{\}=\s]+)\s*==\s*([a-zA-Z0-9]+)\s*\}\s*((?:(?!(\{\/\}|{#)).?)*)\{\/\}/gs;
         this.contentXml = this.contentXml.replace(conditionRegex, (_match, key, value, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue?.toString() === value ? content : "";
@@ -64,7 +64,7 @@ export class OdtTemplater {
      * @param data The object containing the placeholder values.
      */
     _processEmptyInlineConditionals(data) {
-        const emptyConditionRegex = /\{\s*#([^\\{}]+?)\s*\}((?:(?!text:p)[\s\S])*?)\{\/\}/gs;
+        const emptyConditionRegex = /\{\s?#([^#\{\}=\s]+)\s*\}\s*((?:(?!(\{\/\}|{#)).?)*)\{\/\}/gs;
         this.contentXml = this.contentXml.replace(emptyConditionRegex, (_match, key, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue !== null && actualValue !== undefined && actualValue !== "" && actualValue !== false ? content : "";
@@ -80,7 +80,7 @@ export class OdtTemplater {
      * @param data The object containing the placeholder values.
      */
     _processBlockConditionals(data) {
-        const blockConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*==\s*([^\\{}]+?)\s*\}\s*<.*?\/text:p>([\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+        const blockConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s?#([^#\{\}=\s]+)\s*==\s*([a-zA-Z0-9]+)\s*\}\s*<\/text:p>((?:(?!(\{\/\}|{#)).?)*)<text:p[^>]*?>\{\/\}<\/text:p>/gs;
         this.contentXml = this.contentXml.replace(blockConditionRegex, (_match, key, value, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue?.toString() === value ? content : "";
@@ -96,7 +96,7 @@ export class OdtTemplater {
      * @param data The object containing the placeholder values.
      */
     _processEmptyBlockConditionals(data) {
-        const emptyConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s*#([^\\{}]+?)\s*\}\s*<.*?\/text:p>([\s\S]*?)<text:p(?:(?!<text:p)[\s\S])*?\{\/\}.*?<\/text:p>/gs;
+        const emptyConditionRegex = /<text:p(?:(?!<text:p)[\s\S])*?\{\s?#([^#\{\}=\s]+)\s*\}\s*<\/text:p>((?:(?!(\{\/\}|{#)).?)*)<text:p[^>]*?>\{\/\}<\/text:p>/gs;
         this.contentXml = this.contentXml.replace(emptyConditionRegex, (_match, key, content) => {
             const actualValue = this._getValueFromPath(data, key);
             return actualValue !== null && actualValue !== undefined && actualValue !== "" && actualValue !== false ? content : "";
@@ -108,7 +108,7 @@ export class OdtTemplater {
      * @param data The object containing the placeholder values.
      */
     _replacePlaceholders(data) {
-        const variableRegex = /\{([^#/]*?)\}/g;
+        const variableRegex = /\{([^#/{}]*?)\}/g;
         this.contentXml = this.contentXml.replace(variableRegex, (_match, path) => {
             const value = this._getValueFromPath(data, path.trim());
             return value !== null && value !== undefined ? this._escapeSpecialCharacters(String(value)) : "";

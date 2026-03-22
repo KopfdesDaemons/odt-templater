@@ -20,7 +20,7 @@ export declare class OdtTemplater {
      */
     private _escapeSpecialCharacters;
     /**
-     * Removes Tags from within placeholders in the template.
+     * Removes tags from placeholders in the template.
      * E.g., {<text:span>key</text:span>} becomes {key}
      */
     private _removeTagsFromTemplate;

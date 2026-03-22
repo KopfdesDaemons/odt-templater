@@ -11,3 +11,7 @@
 ## [1.0.2]
 
 - Escape special characters to prevent XML corruption
+
+## [1.0.3]
+
+- ReDos protection for inline conditionals and placeholders
